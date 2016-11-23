@@ -1,17 +1,17 @@
-// 
+//
 //  DataGridRenderer.js
 //  Part of Mr-Data-Converter
-//  
+//
 //  Created by Shan Carter on 2010-10-18.
-// 
+//
 
 
 var DataGridRenderer = {
-  
+
   //---------------------------------------
   // Actionscript
   //---------------------------------------
-  
+
   as: function (dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "//";
@@ -19,7 +19,7 @@ var DataGridRenderer = {
     var outputText = "[";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loops
     for (var i=0; i < numRows; i++) {
       var row = dataGrid[i];
@@ -29,7 +29,7 @@ var DataGridRenderer = {
           var rowOutput = row[j] || "null";
         } else {
           var rowOutput = '"'+( row[j] || "" )+'"';
-        };      
+        };
         outputText += (headerNames[j] + ":" + rowOutput)
         if (j < (numColumns-1)) {outputText+=","};
       };
@@ -37,16 +37,16 @@ var DataGridRenderer = {
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += "];";
-    
-    
+
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // ASP / VBScript
   //---------------------------------------
-  
+
   asp: function (dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "'";
@@ -54,7 +54,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     for (var i=0; i < numRows; i++) {
       var row = dataGrid[i];
@@ -64,19 +64,19 @@ var DataGridRenderer = {
         } else {
           var rowOutput = '"'+( row[j] || "" )+'"';
         };
-      outputText += 'myArray('+j+','+i+') = '+rowOutput+newLine;        
+      outputText += 'myArray('+j+','+i+') = '+rowOutput+newLine;
       };
     };
     outputText = 'Dim myArray('+(j-1)+','+(i-1)+')'+newLine+outputText;
-    
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // HTML Table
   //---------------------------------------
-  
+
   html: function (dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "<!--";
@@ -84,14 +84,14 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     outputText += "<table>"+newLine;
     outputText += indent+"<thead>"+newLine;
     outputText += indent+indent+"<tr>"+newLine;
-    
+
     for (var j=0; j < numColumns; j++) {
-      outputText += indent+indent+indent+'<th class="'+headerNames[j]+'-cell">';          
+      outputText += indent+indent+indent+'<th class="'+headerNames[j]+'-cell">';
       outputText += headerNames[j];
       outputText += '</th>'+newLine;
     };
@@ -108,7 +108,7 @@ var DataGridRenderer = {
       }
       outputText += indent+indent+"<tr"+rowClassName+">"+newLine;
       for (var j=0; j < numColumns; j++) {
-        outputText += indent+indent+indent+'<td class="'+headerNames[j]+'-cell">';          
+        outputText += indent+indent+indent+'<td class="'+headerNames[j]+'-cell">';
         outputText += row[j]
         outputText += '</td>'+newLine
       };
@@ -116,15 +116,15 @@ var DataGridRenderer = {
     };
     outputText += indent+"</tbody>"+newLine;
     outputText += "</table>";
-    
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // JSON properties
   //---------------------------------------
-  
+
   json: function (dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "//";
@@ -132,7 +132,7 @@ var DataGridRenderer = {
     var outputText = "[";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     for (var i=0; i < numRows; i++) {
       var row = dataGrid[i];
@@ -143,19 +143,19 @@ var DataGridRenderer = {
         } else {
           var rowOutput = '"' + ( row[j] || "" ) + '"';
         };
-  
+
       outputText += ('"'+headerNames[j] +'"' + ":" + rowOutput );
-  
+
         if (j < (numColumns-1)) {outputText+=","};
       };
       outputText += "}";
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += "]";
-    
+
     return outputText;
   },
-  
+
   //---------------------------------------
   // JSON Array of Columns
   //---------------------------------------
@@ -166,7 +166,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     outputText += "{"+newLine;
     for (var i=0; i < numColumns; i++) {
@@ -183,12 +183,12 @@ var DataGridRenderer = {
       if (i < (numColumns-1)) {outputText += ","+newLine};
     };
     outputText += newLine+"}";
-    
-    
+
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // JSON Array of Rows
   //---------------------------------------
@@ -199,7 +199,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     outputText += "["+newLine;
     for (var i=0; i < numRows; i++) {
@@ -216,17 +216,59 @@ var DataGridRenderer = {
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += newLine+"]";
-    
-    
+
+
     return outputText;
   },
-  
-  
+
+
 
   //---------------------------------------
   // JSON Dictionary
   //---------------------------------------
   jsonDict: function(dataGrid, headerNames, headerTypes, indent, newLine) {
+    //inits...
+    var commentLine = "//";
+    var commentLineEnd = "";
+    var outputText = "";
+    var numRows = dataGrid.length;
+    var numColumns = headerNames.length;
+
+    //begin render loop
+    outputText += "{" + newLine;
+    for (var i = 0; i < numRows; i++) {
+      outputText += indent + '"' + dataGrid[i][0] + '": ';
+      if (numColumns == 2) {
+        outputText += _fmtVal(i, 1, dataGrid);
+      } else {
+        outputText += '{ ';
+        for (var j = 1; j < numColumns; j++) {
+          if (j > 1) outputText += ', ';
+          outputText += '"' + headerNames[j] + '"' + ":" + _fmtVal(i, j, dataGrid);
+        }
+        outputText += '}';
+      }
+      if (i < (numRows - 1)) {
+        outputText += "," + newLine;
+      }
+    }
+    outputText += newLine + "}";
+
+    function _fmtVal(i, j) {
+      if ((headerTypes[j] == "int")||(headerTypes[j] == "float")) {
+        return dataGrid[i][j] || 0;
+      } else {
+        return '"'+(dataGrid[i][j] || "")+'"' ;
+      }
+    }
+
+    return outputText;
+  },
+
+  //---------------------------------------
+  // JSON Till
+  //---------------------------------------
+  jsonTill: function(dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "//";
     var commentLineEnd = "";
@@ -277,7 +319,7 @@ var DataGridRenderer = {
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
     var tableName = "MrDataConverter"
-    
+
     //begin render loop
     outputText += 'CREATE TABLE '+tableName+' (' + newLine;
     outputText += indent+"id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,"+newLine;
@@ -305,18 +347,18 @@ var DataGridRenderer = {
         } else {
           outputText += "'"+( dataGrid[i][j] || "" )+"'";
         };
-        
+
         if (j < numColumns - 1) {outputText += ","};
       };
       outputText += ")";
       if (i < numRows - 1) {outputText += ","+newLine;};
     };
     outputText += ";";
-    
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // PHP
   //---------------------------------------
@@ -328,7 +370,7 @@ var DataGridRenderer = {
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
     var tableName = "MrDataConverter"
-    
+
     //begin render loop
     outputText += "array(" + newLine;
     for (var i=0; i < numRows; i++) {
@@ -339,7 +381,7 @@ var DataGridRenderer = {
           var rowOutput = row[j] || "null";
         } else {
           var rowOutput = '"'+(row[j] || "")+'"';
-        };          
+        };
         outputText += ('"'+headerNames[j]+'"' + "=>" + rowOutput)
         if (j < (numColumns-1)) {outputText+=","};
       };
@@ -347,14 +389,14 @@ var DataGridRenderer = {
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += newLine + ");";
-    
+
     return outputText;
   },
-  
+
   //---------------------------------------
   // Python dict
   //---------------------------------------
-  
+
   python: function (dataGrid, headerNames, headerTypes, indent, newLine) {
     //inits...
     var commentLine = "//";
@@ -362,7 +404,7 @@ var DataGridRenderer = {
     var outputText = "[";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     for (var i=0; i < numRows; i++) {
       var row = dataGrid[i];
@@ -373,20 +415,20 @@ var DataGridRenderer = {
         } else {
           var rowOutput = '"'+(row[j] || "")+'"';
         };
-  
+
       outputText += ('"'+headerNames[j] +'"' + ":" + rowOutput );
-  
+
         if (j < (numColumns-1)) {outputText+=","};
       };
       outputText += "}";
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += "];";
-    
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // Ruby
   //---------------------------------------
@@ -398,7 +440,7 @@ var DataGridRenderer = {
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
     var tableName = "MrDataConverter"
-    
+
     //begin render loop
     outputText += "[";
     for (var i=0; i < numRows; i++) {
@@ -409,7 +451,7 @@ var DataGridRenderer = {
           var rowOutput = row[j] || "nil"
         } else {
           var rowOutput = '"'+(row[j] || "")+'"';
-        };         
+        };
         outputText += ('"'+headerNames[j]+'"' + "=>" + rowOutput)
         if (j < (numColumns-1)) {outputText+=","};
       };
@@ -417,11 +459,11 @@ var DataGridRenderer = {
       if (i < (numRows-1)) {outputText += ","+newLine};
     };
     outputText += "];";
-    
+
     return outputText;
   },
-  
-  
+
+
   //---------------------------------------
   // XML Nodes
   //---------------------------------------
@@ -432,7 +474,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     outputText = '<?xml version="1.0" encoding="UTF-8"?>' + newLine;
     outputText += "<rows>"+newLine;
@@ -440,20 +482,20 @@ var DataGridRenderer = {
       var row = dataGrid[i];
       outputText += indent+"<row>"+newLine;
       for (var j=0; j < numColumns; j++) {
-        outputText += indent+indent+'<'+headerNames[j]+'>';          
+        outputText += indent+indent+'<'+headerNames[j]+'>';
         outputText += row[j] || ""
         outputText += '</'+headerNames[j]+'>'+newLine
       };
       outputText += indent+"</row>"+newLine;
     };
     outputText += "</rows>";
-    
+
     return outputText;
-    
+
   },
-  
-  
-  
+
+
+
   //---------------------------------------
   // XML properties
   //---------------------------------------
@@ -464,7 +506,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-  
+
     //begin render loop
     outputText = '<?xml version="1.0" encoding="UTF-8"?>' + newLine;
     outputText += "<rows>"+newLine;
@@ -472,17 +514,17 @@ var DataGridRenderer = {
       var row = dataGrid[i];
       outputText += indent+"<row ";
       for (var j=0; j < numColumns; j++) {
-        outputText += headerNames[j]+'=';          
+        outputText += headerNames[j]+'=';
         outputText += '"' + row[j] + '" ';
       };
       outputText += "></row>"+newLine;
     };
     outputText += "</rows>";
-    
+
     return outputText;
-    
+
   },
-  
+
   //---------------------------------------
   // XML Illustrator
   //---------------------------------------
@@ -493,7 +535,7 @@ var DataGridRenderer = {
     var outputText = "";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
-    
+
     //begin render loop
     outputText = '<?xml version="1.0" encoding="utf-8"?>' + newLine;
     outputText += '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20001102//EN"    "http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd" [' + newLine;
@@ -513,26 +555,26 @@ var DataGridRenderer = {
     };
     outputText += indent+indent+'</variables>' + newLine;
     outputText += indent+indent+'<v:sampleDataSets  xmlns:v="http://ns.adobe.com/Variables/1.0/" xmlns="http://ns.adobe.com/GenericCustomNamespace/1.0/">' + newLine;
-    
+
     for (var i=0; i < numRows; i++) {
       var row = dataGrid[i];
       outputText += indent+indent+indent+'<v:sampleDataSet dataSetName="' + row[0] + '">'+newLine;
       for (var j=0; j < numColumns; j++) {
-        outputText += indent+indent+indent+indent+'<'+headerNames[j]+'>'+newLine;          
+        outputText += indent+indent+indent+indent+'<'+headerNames[j]+'>'+newLine;
         outputText += indent+indent+indent+indent+indent+'<p>' + row[j] + '</p>' +newLine;
         outputText += indent+indent+indent+indent+'</'+headerNames[j]+'>'+newLine
       };
       outputText += indent+indent+indent+'</v:sampleDataSet>'+newLine;
     };
-    
+
     outputText += indent+indent+'</v:sampleDataSets>' + newLine;
     outputText += indent+'</variableSet>' + newLine;
     outputText += '</variableSets>' + newLine;
     outputText += '</svg>' + newLine;
-    
-    
+
+
     return outputText;
-    
+
   },
-  
+
 }
