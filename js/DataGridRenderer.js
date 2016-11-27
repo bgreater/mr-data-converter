@@ -295,7 +295,30 @@ var DataGridRenderer = {
       var groupKeys = Object.keys(groupData);
       groupKeys.sort();
       for (var i=0; i < groupKeys.length; i++) {
-        outputText += '"ASHLEY": {';
+        outputText += newLine+'"' + groupKeys[i] + '": {'+newLine;
+        outputText += '  "store_list": ['+newLine;
+        for (var j=0; j < groupData[groupKeys[i]].length; j++) {
+          var row = groupData[groupKeys[i]][j];
+          outputText += "    {"+newLine+"      ";
+          for (var k=0; k < numColumns; k++) {
+            if ((headerTypes[k] == "int")||(headerTypes[k] == "float")) {
+              var rowOutput = row[k] || "null";
+            } else {
+              var rowOutput = '"' + ( row[k] || "" ) + '"';
+            };
+
+            outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
+
+            if (k < (numColumns-1)) {outputText+=","+newLine+"      "};
+          };
+          outputText += newLine+"    }";
+          if (j < (groupData[groupKeys[i]].length-1)) {
+            outputText += ","+newLine;
+          } else {
+            outputText += newLine+"  ]"+newLine;
+          }
+        }
+        outputText += groupKeys[i] == groupKeys.length - 1 ? '}' : '},';
       }
     }
     // Normal render

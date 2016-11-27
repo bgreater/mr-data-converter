@@ -17,21 +17,22 @@ function DataConverter(nodeId) {
   this.node                   = $("#"+nodeId);
 
   this.outputDataTypes        = [
-                                {"text":"Actionscript",           "id":"as",               "notes":""},
-                                {"text":"ASP/VBScript",           "id":"asp",              "notes":""},
-                                {"text":"HTML",                   "id":"html",             "notes":""},
-                                {"text":"JSON - Properties",      "id":"json",             "notes":""},
-                                {"text":"JSON - Column Arrays",   "id":"jsonArrayCols",    "notes":""},
-                                {"text":"JSON - Row Arrays",      "id":"jsonArrayRows",    "notes":""},
-                                {"text":"JSON - Dictionary",      "id":"jsonDict",         "notes":""},
-                                {"text":"JSON - Till",            "id":"jsonTill",         "notes":""},
-                                {"text":"MySQL",                  "id":"mysql",            "notes":""},
-                                {"text":"PHP",                    "id":"php",              "notes":""},
-                                {"text":"Python - Dict",          "id":"python",           "notes":""},
-                                {"text":"Ruby",                   "id":"ruby",             "notes":""},
-                                {"text":"XML - Properties",       "id":"xmlProperties",    "notes":""},
-                                {"text":"XML - Nodes",            "id":"xml",              "notes":""},
-                                {"text":"XML - Illustrator",      "id":"xmlIllustrator",   "notes":""}];
+                                // {"text":"Actionscript",           "id":"as",               "notes":""},
+                                // {"text":"ASP/VBScript",           "id":"asp",              "notes":""},
+                                // {"text":"HTML",                   "id":"html",             "notes":""},
+                                // {"text":"JSON - Properties",      "id":"json",             "notes":""},
+                                // {"text":"JSON - Column Arrays",   "id":"jsonArrayCols",    "notes":""},
+                                // {"text":"JSON - Row Arrays",      "id":"jsonArrayRows",    "notes":""},
+                                // {"text":"JSON - Dictionary",      "id":"jsonDict",         "notes":""},
+                                {"text":"JSON - Till",            "id":"jsonTill",         "notes":""}//,
+                                // {"text":"MySQL",                  "id":"mysql",            "notes":""},
+                                // {"text":"PHP",                    "id":"php",              "notes":""},
+                                // {"text":"Python - Dict",          "id":"python",           "notes":""},
+                                // {"text":"Ruby",                   "id":"ruby",             "notes":""},
+                                // {"text":"XML - Properties",       "id":"xmlProperties",    "notes":""},
+                                // {"text":"XML - Nodes",            "id":"xml",              "notes":""},
+                                // {"text":"XML - Illustrator",      "id":"xmlIllustrator",   "notes":""}
+                                ];
   this.outputDataType         = "jsonTill";
 
   this.columnDelimiter        = "\t";
