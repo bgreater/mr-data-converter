@@ -289,7 +289,6 @@ var DataGridRenderer = {
         groupData[city].push(dataGrid[i]);
       }
     }
-    console.log(groupData);
     // Render groups
     if (Object.keys(groupData).length) {
       var groupKeys = Object.keys(groupData);
@@ -301,14 +300,8 @@ var DataGridRenderer = {
           var row = groupData[groupKeys[i]][j];
           outputText += "    {"+newLine+"      ";
           for (var k=0; k < numColumns; k++) {
-            if ((headerTypes[k] == "int")||(headerTypes[k] == "float")) {
-              var rowOutput = row[k] || "null";
-            } else {
-              var rowOutput = '"' + ( row[k] || "" ) + '"';
-            };
-
+            var rowOutput = '"' + ( row[k] || "" ) + '"';
             outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
-
             if (k < (numColumns-1)) {outputText+=","+newLine+"      "};
           };
           outputText += newLine+"    }";
