@@ -272,7 +272,7 @@ var DataGridRenderer = {
     //inits...
     var commentLine = "//";
     var commentLineEnd = "";
-    var outputText = "[";
+    var outputText = "{";
     var numRows = dataGrid.length;
     var numColumns = headerNames.length;
     var groupData = {};
@@ -294,24 +294,24 @@ var DataGridRenderer = {
       var groupKeys = Object.keys(groupData);
       groupKeys.sort();
       for (var i=0; i < groupKeys.length; i++) {
-        outputText += newLine+'"' + groupKeys[i] + '": {'+newLine;
-        outputText += '  "store_list": ['+newLine;
+        outputText += newLine+'  "' + groupKeys[i] + '": {'+newLine;
+        outputText += '    "store_list": ['+newLine;
         for (var j=0; j < groupData[groupKeys[i]].length; j++) {
           var row = groupData[groupKeys[i]][j];
-          outputText += "    {"+newLine+"      ";
+          outputText += "      {"+newLine+"        ";
           for (var k=0; k < numColumns; k++) {
             var rowOutput = '"' + ( row[k] || "" ) + '"';
             outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
-            if (k < (numColumns-1)) {outputText+=","+newLine+"      "};
+            if (k < (numColumns-1)) {outputText+=","+newLine+"        "};
           };
-          outputText += newLine+"    }";
+          outputText += newLine+"      }";
           if (j < (groupData[groupKeys[i]].length-1)) {
             outputText += ","+newLine;
           } else {
-            outputText += newLine+"  ]"+newLine;
+            outputText += newLine+"    ]"+newLine;
           }
         }
-        outputText += groupKeys[i] == groupKeys.length - 1 ? '}' : '},';
+        outputText += i == groupKeys.length - 1 ? '  }' : '  },';
       }
     }
     // Normal render
@@ -336,7 +336,7 @@ var DataGridRenderer = {
       };
     }
 
-    outputText += "]";
+    outputText += newLine+"}";
 
     //console.log(outputText);
     return outputText;
