@@ -268,78 +268,111 @@ var DataGridRenderer = {
   //---------------------------------------
   // JSON Till
   //---------------------------------------
-  jsonTill: function(dataGrid, headerNames, headerTypes, indent, newLine) {
-    //inits...
-    var commentLine = "//";
-    var commentLineEnd = "";
-    var outputText = "{";
-    var numRows = dataGrid.length;
-    var numColumns = headerNames.length;
-    var groupData = {};
+  jsonTill: function(dataGrid, headerNames, headerTypes, indent, newLine, geocode) {
 
-    // Organize data into cities
-    for (var i=0; i < numRows; i++) {
-      var row = dataGrid[i];
-      var cityIndex = headerNames.indexOf('city');
-      if (cityIndex) {
-        var city = dataGrid[i][cityIndex];
-        if (groupData[city] == undefined) {
-          groupData[city] = [];
-        }
-        groupData[city].push(dataGrid[i]);
-      }
-    }
-    // Render groups
-    if (Object.keys(groupData).length) {
-      var groupKeys = Object.keys(groupData);
-      groupKeys.sort();
-      for (var i=0; i < groupKeys.length; i++) {
-        outputText += newLine+'  "' + groupKeys[i] + '": {'+newLine;
-        outputText += '    "store_list": ['+newLine;
-        for (var j=0; j < groupData[groupKeys[i]].length; j++) {
-          var row = groupData[groupKeys[i]][j];
-          outputText += "      {"+newLine+"        ";
-          for (var k=0; k < numColumns; k++) {
-            var rowOutput = '"' + ( row[k] || "" ) + '"';
-            outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
-            if (k < (numColumns-1)) {outputText+=","+newLine+"        "};
-          };
-          outputText += newLine+"      }";
-          if (j < (groupData[groupKeys[i]].length-1)) {
-            outputText += ","+newLine;
-          } else {
-            outputText += newLine+"    ]"+newLine;
-          }
-        }
-        outputText += i == groupKeys.length - 1 ? '  }' : '  },';
-      }
-    }
-    // Normal render
-    else {
-      //begin render loop
+    function render(dataGrid, headerNames, headerTypes, indent, newLine) {
+      //inits...
+      var commentLine = "//";
+      var commentLineEnd = "";
+      var outputText = "{";
+      var numRows = dataGrid.length;
+      var numColumns = headerNames.length;
+      var groupData = {};
+
+      // Organize data into cities
       for (var i=0; i < numRows; i++) {
         var row = dataGrid[i];
-        outputText += "{";
-        for (var j=0; j < numColumns; j++) {
-          if ((headerTypes[j] == "int")||(headerTypes[j] == "float")) {
-            var rowOutput = row[j] || "null";
-          } else {
-            var rowOutput = '"' + ( row[j] || "" ) + '"';
+        var cityIndex = headerNames.indexOf('city');
+        if (cityIndex) {
+          var city = dataGrid[i][cityIndex];
+          if (groupData[city] == undefined) {
+            groupData[city] = [];
+          }
+          groupData[city].push(dataGrid[i]);
+        }
+      }
+      // Render groups
+      if (Object.keys(groupData).length) {
+        var groupKeys = Object.keys(groupData);
+        groupKeys.sort();
+        for (var i=0; i < groupKeys.length; i++) {
+          outputText += newLine+'  "' + groupKeys[i] + '": {'+newLine;
+          outputText += '    "store_list": ['+newLine;
+          for (var j=0; j < groupData[groupKeys[i]].length; j++) {
+            var row = groupData[groupKeys[i]][j];
+            outputText += "      {"+newLine+"        ";
+            for (var k=0; k < numColumns; k++) {
+              var rowOutput = '"' + ( row[k] || "" ) + '"';
+              outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
+              if (k < (numColumns-1)) {outputText+=","+newLine+"        "};
+            };
+            outputText += newLine+"      }";
+            if (j < (groupData[groupKeys[i]].length-1)) {
+              outputText += ","+newLine;
+            } else {
+              outputText += newLine+"    ]"+newLine;
+            }
+          }
+          outputText += i == groupKeys.length - 1 ? '  }' : '  },';
+        }
+      }
+      // Normal render
+      else {
+        //begin render loop
+        for (var i=0; i < numRows; i++) {
+          var row = dataGrid[i];
+          outputText += "{";
+          for (var j=0; j < numColumns; j++) {
+            if ((headerTypes[j] == "int")||(headerTypes[j] == "float")) {
+              var rowOutput = row[j] || "null";
+            } else {
+              var rowOutput = '"' + ( row[j] || "" ) + '"';
+            };
+
+            outputText += ('"'+headerNames[j] +'"' + ":" + rowOutput );
+
+            if (j < (numColumns-1)) {outputText+=","};
           };
-
-        outputText += ('"'+headerNames[j] +'"' + ":" + rowOutput );
-
-          if (j < (numColumns-1)) {outputText+=","};
+          outputText += "}";
+          if (i < (numRows-1)) {outputText += ","+newLine};
         };
-        outputText += "}";
-        if (i < (numRows-1)) {outputText += ","+newLine};
-      };
+      }
+
+      outputText += newLine+"}";
+
+      //console.log(outputText);
+      return outputText;
     }
 
-    outputText += newLine+"}";
+    if (geocode) {
+      // Add lat & lng.
+      headerNames.push("lat", "lng");
+      headerTypes.push("int", "int");
+      var locationsString = '';
+      for (var i = 0; i < dataGrid.length; i++) {
+        locationsString += i != 0 ? '&location=' : '';
+        locationsString += encodeURIComponent(dataGrid[i][1]) + ',' + encodeURIComponent(dataGrid[i][2]) + ',' + encodeURIComponent(dataGrid[i][3]) + ',' + encodeURIComponent(dataGrid[i][4]);
+      }
+      // Get geo location data.
+      $.getJSON( "http://www.mapquestapi.com/geocoding/v1/batch?key=" + geocode + "&location=" + locationsString, function( data ) {
+        if (data.results) {
+          console.log('data.results[0]', data.results[0]);
+          for (var i = 0; i < data.results.length; i++) {
+            console.log('inside loop');
+            dataGrid[i].push(data.results[i].locations[0].latLng.lat);
+            dataGrid[i].push(data.results[i].locations[0].latLng.lng);
+          }
+          console.log('dataGrid', dataGrid);
+          console.log('data', data);
+          $('#dataOutput').val(render(dataGrid, headerNames, headerTypes, indent, newLine));
+        }
+      });
+      return 'loading...';
+    }
+    else {
+      return render(dataGrid, headerNames, headerTypes, indent, newLine);
+    }
 
-    //console.log(outputText);
-    return outputText;
   },
 
 

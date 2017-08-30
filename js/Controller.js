@@ -1,5 +1,18 @@
 var _gaq = _gaq || [];
 
+function getParameter(paramName) {
+  var searchString = window.location.search.substring(1),
+      i, val, params = searchString.split("&");
+
+  for (i=0;i<params.length;i++) {
+    val = params[i].split("=");
+    if (val[0] == paramName) {
+      return val[1];
+    }
+  }
+  return null;
+}
+
 $(document).ready(function(){
   var widthOffset = 345;
   var heightOffset = 35
@@ -14,9 +27,13 @@ $(document).ready(function(){
 
   d.create(w,h);
 
+  if (getParameter('mapquestKey')) {
+    $('#mapquestKey').val(getParameter('mapquestKey'));
+  }
+
   $(".settingsElement").change(updateSettings);
 
-  $(window).bind('resize',function() {  
+  $(window).bind('resize',function() {
 
       w = win.width() - widthOffset;
       h = win.height() - heightOffset;
@@ -27,13 +44,13 @@ $(document).ready(function(){
 
 
   function updateSettings (evt) {
-    
+
     if (evt) {
       _gaq.push(['_trackEvent', 'Settings',evt.currentTarget.id ]);
     };
 
     d.includeWhiteSpace = $('#includeWhiteSpaceCB').attr('checked');
-    
+
     if (d.includeWhiteSpace) {
       $("input[name=indentType]").removeAttr("disabled");
       var indentType = $('input[name=indentType]:checked').val();
@@ -47,6 +64,8 @@ $(document).ready(function(){
     }
 
     d.headersProvided = $('#headersProvidedCB').attr('checked');
+
+    d.geocode = $('#geocode').attr('checked') ? $('#mapquestKey').val() : false;
 
     if (d.headersProvided) {
       $("input[name=headerModifications]").removeAttr("disabled");
@@ -65,16 +84,16 @@ $(document).ready(function(){
     } else {
       $("input[name=headerModifications]").attr("disabled", "disabled");
     }
-    
+
     d.delimiter = $('input[name=delimiter]:checked').val();
     d.decimal = $('input[name=decimal]:checked').val();
-    
+
     d.useUnderscores = true;
-    
+
     d.convert();
   };
 
   updateSettings();
-  
+
 })
 
