@@ -354,7 +354,7 @@ var DataGridRenderer = {
         locationsString += encodeURIComponent(dataGrid[i][1]) + ',' + encodeURIComponent(dataGrid[i][2]) + ',' + encodeURIComponent(dataGrid[i][3]) + ',' + encodeURIComponent(dataGrid[i][4]);
       }
       // Get geo location data.
-      $.getJSON( "http://www.mapquestapi.com/geocoding/v1/batch?key=" + geocode + "&location=" + locationsString, function( data ) {
+      $.getJSON( "https://www.mapquestapi.com/geocoding/v1/batch?key=" + geocode + "&location=" + locationsString, function( data ) {
         if (data.results) {
           console.log('data.results[0]', data.results[0]);
           for (var i = 0; i < data.results.length; i++) {
