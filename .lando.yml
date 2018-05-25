@@ -1,0 +1,4 @@
+name: till-data-converter
+recipe: lamp
+config:
+  site: till-data-converter
