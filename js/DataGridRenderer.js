@@ -271,6 +271,7 @@ var DataGridRenderer = {
   jsonTill: function(dataGrid, headerNames, headerTypes, indent, newLine, geocode) {
 
     function render(dataGrid, headerNames, headerTypes, indent, newLine) {
+      console.log(headerNames, dataGrid);
       //inits...
       var commentLine = "//";
       var commentLineEnd = "";
@@ -284,7 +285,7 @@ var DataGridRenderer = {
         var row = dataGrid[i];
         var cityIndex = headerNames.indexOf('city');
         if (cityIndex) {
-          var city = dataGrid[i][cityIndex];
+          var city = dataGrid[i][cityIndex].trim();
           if (groupData[city] == undefined) {
             groupData[city] = [];
           }
