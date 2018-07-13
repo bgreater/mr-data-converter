@@ -302,7 +302,7 @@ var DataGridRenderer = {
             var row = groupData[groupKeys[i]][j];
             outputText += "      {"+newLine+"        ";
             for (var k=0; k < numColumns; k++) {
-              var rowOutput = '"' + ( row[k] || "" ) + '"';
+              var rowOutput = '"' + ( row[k] || "" ).trim() + '"';
               outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
               if (k < (numColumns-1)) {outputText+=","+newLine+"        "};
             };
