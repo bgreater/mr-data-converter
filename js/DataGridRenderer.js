@@ -271,7 +271,7 @@ var DataGridRenderer = {
   jsonTill: function(dataGrid, headerNames, headerTypes, indent, newLine, geocode) {
 
     function render(dataGrid, headerNames, headerTypes, indent, newLine) {
-      console.log(headerNames, dataGrid);
+
       //inits...
       var commentLine = "//";
       var commentLineEnd = "";
