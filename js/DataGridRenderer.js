@@ -285,7 +285,7 @@ var DataGridRenderer = {
         var row = dataGrid[i];
         var cityIndex = headerNames.indexOf('city');
         if (cityIndex) {
-          var city = dataGrid[i][cityIndex].trim();
+          var city = dataGrid[i][cityIndex].trim().toUpperCase();
           if (groupData[city] == undefined) {
             groupData[city] = [];
           }
@@ -303,7 +303,7 @@ var DataGridRenderer = {
             var row = groupData[groupKeys[i]][j];
             outputText += "      {"+newLine+"        ";
             for (var k=0; k < numColumns; k++) {
-              var rowOutput = '"' + ( row[k] || "" ).trim() + '"';
+              var rowOutput = '"' + ( String(row[k]) || "" ).trim() + '"';
               outputText += ('"'+headerNames[k] +'"' + ":" + rowOutput );
               if (k < (numColumns-1)) {outputText+=","+newLine+"        "};
             };
